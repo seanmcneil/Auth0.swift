@@ -25,7 +25,7 @@ let package = Package(
             name: "Auth0Dependencies", 
             dependencies: [
                 "SimpleKeychain",
-                "JWTDecode",
+                .product(name: "JWTDecode", package: "JWTDecode")],
                 .target(name: "Auth0")
             ], 
             path: "Package"), // Hack
