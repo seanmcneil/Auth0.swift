@@ -15,8 +15,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/auth0/SimpleKeychain.git", .revision("09da3b94a46cdf1e173c39cea352e6a3655b2671")),
-        .package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", .revision("84c62c9759383a1fdd496a5e18890fe7f0d5343d"))
+        .package(url: "https://github.com/auth0/SimpleKeychain.git", .branch("dynamic")),
+        .package(name: "JWTDecode", url: "https://github.com/auth0/JWTDecode.swift.git", .branch("dynamic"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
