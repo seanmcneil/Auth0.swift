@@ -15,8 +15,8 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(path: "../SimpleKeychain", .branch("dynamic")),
-        .package(name: "JWTDecode", path: "../JWTDecode.swift", .branch("dynamic"))
+        .package(path: "../SimpleKeychain"),
+        .package(path: "../JWTDecode.swift")
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
