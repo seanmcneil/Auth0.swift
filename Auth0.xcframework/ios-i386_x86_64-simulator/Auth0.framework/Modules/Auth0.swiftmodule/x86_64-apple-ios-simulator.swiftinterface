@@ -1,0 +1,522 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)
+// swift-module-flags: -target x86_64-apple-ios9.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name Auth0
+@_exported import Auth0
+import AuthenticationServices
+import Foundation
+import JWTDecode
+import LocalAuthentication
+import SafariServices
+import SimpleKeychain
+import Swift
+import UIKit
+extension String {
+  public func a0_decodeBase64URLSafe() -> Foundation.Data?
+}
+public protocol AuthProvider {
+  func login(withConnection connection: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]) -> Auth0.NativeAuthTransaction
+  static func isAvailable() -> Swift.Bool
+}
+@_inheritsConvenienceInitializers @objc(A0WebAuth) public class _ObjectiveOAuth2 : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc public init(clientId: Swift.String, url: Foundation.URL)
+  @objc public func addParameters(_ parameters: [Swift.String : Swift.String])
+  @objc public var universalLink: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var ephemeralSession: Swift.Bool {
+    @objc get
+    @objc set
+  }
+  @objc public var connection: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc public var scope: Swift.String? {
+    @objc get
+    @objc set
+  }
+  @objc public func start(_ callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  @objc public func setTelemetryEnabled(_ enabled: Swift.Bool)
+  @objc deinit
+}
+@objc(A0ManagementAPI) public class _ObjectiveManagementAPI : ObjectiveC.NSObject {
+  @objc public init(token: Swift.String)
+  @objc convenience public init(token: Swift.String, url: Foundation.URL)
+  @objc public init(token: Swift.String, url: Foundation.URL, session: Foundation.URLSession)
+  @objc(patchUserWithIdentifier:userMetadata:callback:) public func patchUser(identifier: Swift.String, userMetadata: [Swift.String : Any], callback: @escaping (Foundation.NSError?, [Swift.String : Any]?) -> Swift.Void)
+  @objc(linkUserWithIdentifier:withUserUsingToken:callback:) public func linkUser(identifier: Swift.String, withUserUsingToken token: Swift.String, callback: @escaping (Foundation.NSError?, [[Swift.String : Any]]?) -> Swift.Void)
+  @objc(unlinkUserWithIdentifier:provider:fromUserId:callback:) public func unlink(identifier: Swift.String, provider: Swift.String, fromUserId userId: Swift.String, callback: @escaping (Foundation.NSError?, [[Swift.String : Any]]?) -> Swift.Void)
+  @objc public func setTelemetry(enabled: Swift.Bool)
+  @objc deinit
+  @objc override dynamic public init()
+}
+public typealias DatabaseUser = (email: Swift.String, username: Swift.String?, verified: Swift.Bool)
+public protocol Authentication : Auth0.Loggable, Auth0.Trackable {
+  var clientId: Swift.String { get }
+  var url: Foundation.URL { get }
+  func login(email username: Swift.String, code otp: Swift.String, audience: Swift.String?, scope: Swift.String?, parameters: [Swift.String : Any]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func login(phoneNumber username: Swift.String, code otp: Swift.String, audience: Swift.String?, scope: Swift.String?, parameters: [Swift.String : Any]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  @available(*, deprecated, message: "see login(usernameOrEmail username:, password:, realm:, audience:, scope:)")
+  func login(usernameOrEmail username: Swift.String, password: Swift.String, multifactorCode: Swift.String?, connection: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func login(usernameOrEmail username: Swift.String, password: Swift.String, realm: Swift.String, audience: Swift.String?, scope: Swift.String?, parameters: [Swift.String : Any]?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func login(withOTP otp: Swift.String, mfaToken: Swift.String) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func login(appleAuthorizationCode authorizationCode: Swift.String, fullName: Foundation.PersonNameComponents?, profile: [Swift.String : Any]?, scope: Swift.String?, audience: Swift.String?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func login(facebookSessionAccessToken sessionAccessToken: Swift.String, profile: [Swift.String : Any], scope: Swift.String?, audience: Swift.String?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func loginDefaultDirectory(withUsername username: Swift.String, password: Swift.String, audience: Swift.String?, scope: Swift.String?, parameters: [Swift.String : Any]?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func createUser(email: Swift.String, username: Swift.String?, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]?, rootAttributes: [Swift.String : Any]?) -> Auth0.Request<Auth0.DatabaseUser, Auth0.AuthenticationError>
+  func resetPassword(email: Swift.String, connection: Swift.String) -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  @available(*, deprecated, message: "use createUser(email:, username:, password:, connection:, userMetadata:) and then login(usernameOrEmail username:, password:, realm:, audience:, scope:)")
+  func signUp(email: Swift.String, username: Swift.String?, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]?, scope: Swift.String, parameters: [Swift.String : Any]) -> Auth0.ConcatRequest<Auth0.DatabaseUser, Auth0.Credentials, Auth0.AuthenticationError>
+  func startPasswordless(email: Swift.String, type: Auth0.PasswordlessType, connection: Swift.String, parameters: [Swift.String : Any]) -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  func startPasswordless(phoneNumber: Swift.String, type: Auth0.PasswordlessType, connection: Swift.String) -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  @available(*, deprecated, message: "see userInfo(withAccessToken accessToken:)")
+  func tokenInfo(token: Swift.String) -> Auth0.Request<Auth0.Profile, Auth0.AuthenticationError>
+  func userInfo(token: Swift.String) -> Auth0.Request<Auth0.Profile, Auth0.AuthenticationError>
+  func userInfo(withAccessToken accessToken: Swift.String) -> Auth0.Request<Auth0.UserInfo, Auth0.AuthenticationError>
+  func loginSocial(token: Swift.String, connection: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func tokenExchange(withParameters parameters: [Swift.String : Any]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func tokenExchange(withCode code: Swift.String, codeVerifier: Swift.String, redirectURI: Swift.String) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  @available(*, deprecated, message: "see login(appleAuthorizationCode authorizationCode:, fullName:, scope:, audience:)")
+  func tokenExchange(withAppleAuthorizationCode authCode: Swift.String, scope: Swift.String?, audience: Swift.String?, fullName: Foundation.PersonNameComponents?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func renew(withRefreshToken refreshToken: Swift.String, scope: Swift.String?) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  func revoke(refreshToken: Swift.String) -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  func delegation(withParameters parameters: [Swift.String : Any]) -> Auth0.Request<[Swift.String : Any], Auth0.AuthenticationError>
+  func jwks() -> Auth0.Request<Auth0.JWKS, Auth0.AuthenticationError>
+  func webAuth(withConnection connection: Swift.String) -> Auth0.WebAuth
+}
+public enum PasswordlessType : Swift.String {
+  case Code
+  case WebLink
+  case iOSLink
+  case AndroidLink
+  public typealias RawValue = Swift.String
+  public init?(rawValue: Swift.String)
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension Authentication {
+  public func login(email username: Swift.String, code otp: Swift.String, audience: Swift.String? = nil, scope: Swift.String? = "openid", parameters: [Swift.String : Any] = [:]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func login(phoneNumber username: Swift.String, code otp: Swift.String, audience: Swift.String? = nil, scope: Swift.String? = "openid", parameters: [Swift.String : Any] = [:]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func login(usernameOrEmail username: Swift.String, password: Swift.String, multifactorCode: Swift.String? = nil, connection: Swift.String, scope: Swift.String = "openid", parameters: [Swift.String : Any] = [:]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func login(usernameOrEmail username: Swift.String, password: Swift.String, realm: Swift.String, audience: Swift.String? = nil, scope: Swift.String? = nil, parameters: [Swift.String : Any]? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func login(appleAuthorizationCode authorizationCode: Swift.String, fullName: Foundation.PersonNameComponents? = nil, profile: [Swift.String : Any]? = nil, scope: Swift.String? = "openid profile offline_access", audience: Swift.String? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func login(facebookSessionAccessToken sessionAccessToken: Swift.String, profile: [Swift.String : Any], scope: Swift.String? = "openid profile offline_access", audience: Swift.String? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func loginDefaultDirectory(withUsername username: Swift.String, password: Swift.String, audience: Swift.String? = nil, scope: Swift.String? = nil, parameters: [Swift.String : Any]? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func createUser(email: Swift.String, username: Swift.String? = nil, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]? = nil, rootAttributes: [Swift.String : Any]? = nil) -> Auth0.Request<Auth0.DatabaseUser, Auth0.AuthenticationError>
+  public func createUser(email: Swift.String, username: Swift.String? = nil, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]? = nil) -> Auth0.Request<Auth0.DatabaseUser, Auth0.AuthenticationError>
+  public func signUp(email: Swift.String, username: Swift.String? = nil, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]? = nil, scope: Swift.String = "openid", parameters: [Swift.String : Any] = [:]) -> Auth0.ConcatRequest<Auth0.DatabaseUser, Auth0.Credentials, Auth0.AuthenticationError>
+  public func startPasswordless(email: Swift.String, type: Auth0.PasswordlessType = .Code, connection: Swift.String = "email", parameters: [Swift.String : Any] = [:]) -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  public func startPasswordless(phoneNumber: Swift.String, type: Auth0.PasswordlessType = .Code, connection: Swift.String = "sms") -> Auth0.Request<Swift.Void, Auth0.AuthenticationError>
+  public func loginSocial(token: Swift.String, connection: Swift.String, scope: Swift.String = "openid", parameters: [Swift.String : Any] = [:]) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func renew(withRefreshToken refreshToken: Swift.String, scope: Swift.String? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+  public func tokenExchange(withAppleAuthorizationCode authCode: Swift.String, scope: Swift.String? = "openid profile offline_access", audience: Swift.String? = nil, fullName: Foundation.PersonNameComponents? = nil) -> Auth0.Request<Auth0.Credentials, Auth0.AuthenticationError>
+}
+public protocol Logger {
+  func trace(request: Foundation.URLRequest, session: Foundation.URLSession)
+  func trace(response: Foundation.URLResponse, data: Foundation.Data?)
+  func trace(url: Foundation.URL, source: Swift.String?)
+}
+public typealias A0URLOptionsKey = UIKit.UIApplication.OpenURLOptionsKey
+public func resumeAuth(_ url: Foundation.URL, options: [Auth0.A0URLOptionsKey : Any] = [:]) -> Swift.Bool
+public protocol WebAuth : Auth0.WebAuthenticatable {
+  @available(iOS 11, *)
+  func useLegacyAuthentication(withStyle style: UIKit.UIModalPresentationStyle) -> Self
+}
+extension WebAuth {
+  @available(iOS 11, *)
+  public func useLegacyAuthentication() -> Self
+}
+extension _ObjectiveOAuth2 {
+  @objc(resumeAuthWithURL:options:) public static func resume(_ url: Foundation.URL, options: [Auth0.A0URLOptionsKey : Any]) -> Swift.Bool
+}
+public protocol AuthResumable {
+  func resume(_ url: Foundation.URL, options: [Auth0.A0URLOptionsKey : Any]) -> Swift.Bool
+}
+extension AuthResumable {
+  public func resume(_ url: Foundation.URL, options: [Auth0.A0URLOptionsKey : Any] = [:]) -> Swift.Bool
+}
+public protocol Loggable {
+  var logger: Auth0.Logger? { get set }
+}
+extension Loggable {
+  public func using(logger: Auth0.Logger) -> Self
+  public func logging(enabled: Swift.Bool) -> Self
+}
+public protocol AuthTransaction : Auth0.AuthCancelable, Auth0.AuthResumable {
+  var state: Swift.String? { get }
+}
+public typealias ManagementObject = [Swift.String : Any]
+extension Data {
+  public func a0_encodeBase64URLSafe() -> Swift.String?
+}
+public enum WebAuthError : Foundation.CustomNSError {
+  case noBundleIdentifierFound
+  case cannotDismissWebAuthController
+  case userCancelled
+  case pkceNotAllowed(Swift.String)
+  case noNonceProvided
+  case missingResponseParam(Swift.String)
+  case invalidIdTokenNonce
+  case missingAccessToken
+  case unknownError
+  public static let infoKey: Swift.String
+  public static let errorDomain: Swift.String
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+public struct NativeAuthCredentials {
+  public init(token: Swift.String, extras: [Swift.String : Any] = [:])
+}
+public protocol NativeAuthTransaction : Auth0.AuthTransaction {
+  var scope: Swift.String { get }
+  var connection: Swift.String { get }
+  var parameters: [Swift.String : Any] { get }
+  var authentication: Auth0.Authentication { get }
+  typealias Callback = (Auth0.Result<Auth0.NativeAuthCredentials>) -> Swift.Void
+  func auth(callback: @escaping Self.Callback)
+  func start(callback: @escaping (Auth0.Result<Auth0.Credentials>) -> Swift.Void)
+}
+extension NativeAuthTransaction {
+  public var state: Swift.String? {
+    get
+  }
+  public func start(callback: @escaping (Auth0.Result<Auth0.Credentials>) -> Swift.Void)
+}
+public struct CredentialsManager {
+  public init(authentication: Auth0.Authentication, storeKey: Swift.String = "credentials", storage: SimpleKeychain.A0SimpleKeychain = A0SimpleKeychain())
+  @available(*, deprecated, message: "see enableBiometrics(withTitle title:, cancelTitle:, fallbackTitle:)")
+  public mutating func enableTouchAuth(withTitle title: Swift.String, cancelTitle: Swift.String? = nil, fallbackTitle: Swift.String? = nil)
+  public mutating func enableBiometrics(withTitle title: Swift.String, cancelTitle: Swift.String? = nil, fallbackTitle: Swift.String? = nil)
+  public func store(credentials: Auth0.Credentials) -> Swift.Bool
+  public func clear() -> Swift.Bool
+  public func revoke(_ callback: @escaping (Auth0.CredentialsManagerError?) -> Swift.Void)
+  public func hasValid(minTTL: Swift.Int = 0) -> Swift.Bool
+  public func credentials(withScope scope: Swift.String? = nil, minTTL: Swift.Int = 0, callback: @escaping (Auth0.CredentialsManagerError?, Auth0.Credentials?) -> Swift.Void)
+}
+@objc(A0UserInfo) @objcMembers public class UserInfo : ObjectiveC.NSObject {
+  @objc public static let publicClaims: [Swift.String]
+  @objc final public let sub: Swift.String
+  @objc final public let name: Swift.String?
+  @objc final public let givenName: Swift.String?
+  @objc final public let familyName: Swift.String?
+  @objc final public let middleName: Swift.String?
+  @objc final public let nickname: Swift.String?
+  @objc final public let preferredUsername: Swift.String?
+  @objc final public let profile: Foundation.URL?
+  @objc final public let picture: Foundation.URL?
+  @objc final public let website: Foundation.URL?
+  @objc final public let email: Swift.String?
+  final public let emailVerified: Swift.Bool?
+  @objc final public let gender: Swift.String?
+  @objc final public let birthdate: Swift.String?
+  @objc final public let zoneinfo: Foundation.TimeZone?
+  @objc final public let locale: Foundation.Locale?
+  @objc final public let phoneNumber: Swift.String?
+  final public let phoneNumberVerified: Swift.Bool?
+  @objc final public let address: [Swift.String : Swift.String]?
+  @objc final public let updatedAt: Foundation.Date?
+  @objc final public let customClaims: [Swift.String : Any]?
+  required public init(sub: Swift.String, name: Swift.String?, givenName: Swift.String?, familyName: Swift.String?, middleName: Swift.String?, nickname: Swift.String?, preferredUsername: Swift.String?, profile: Foundation.URL?, picture: Foundation.URL?, website: Foundation.URL?, email: Swift.String?, emailVerified: Swift.Bool?, gender: Swift.String?, birthdate: Swift.String?, zoneinfo: Foundation.TimeZone?, locale: Foundation.Locale?, phoneNumber: Swift.String?, phoneNumberVerified: Swift.Bool?, address: [Swift.String : Swift.String]?, updatedAt: Foundation.Date?, customClaims: [Swift.String : Any]?)
+  @objc convenience required public init?(json: [Swift.String : Any])
+  @objc deinit
+  @objc override dynamic public init()
+}
+public struct JWKS : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension JWKS {
+  public func key(id kid: Swift.String) -> Auth0.JWK?
+}
+public struct JWK : Swift.Codable {
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+}
+public protocol Auth0Error : Swift.Error {
+  init(string: Swift.String?, statusCode: Swift.Int)
+  init(info: [Swift.String : Any], statusCode: Swift.Int)
+  var code: Swift.String { get }
+}
+public func authentication(clientId: Swift.String, domain: Swift.String, session: Foundation.URLSession = .shared) -> Auth0.Authentication
+public func authentication(session: Foundation.URLSession = .shared, bundle: Foundation.Bundle = .main) -> Auth0.Authentication
+public func users(token: Swift.String, session: Foundation.URLSession = .shared, bundle: Foundation.Bundle = .main) -> Auth0.Users
+public func users(token: Swift.String, domain: Swift.String, session: Foundation.URLSession = .shared) -> Auth0.Users
+@objc(A0Credentials) public class Credentials : ObjectiveC.NSObject, Foundation.NSSecureCoding {
+  @objc final public let accessToken: Swift.String?
+  @objc final public let tokenType: Swift.String?
+  @objc final public let expiresIn: Foundation.Date?
+  @objc final public let refreshToken: Swift.String?
+  @objc final public let idToken: Swift.String?
+  @objc final public let scope: Swift.String?
+  @objc public init(accessToken: Swift.String? = nil, tokenType: Swift.String? = nil, idToken: Swift.String? = nil, refreshToken: Swift.String? = nil, expiresIn: Foundation.Date? = nil, scope: Swift.String? = nil)
+  convenience required public init(json: [Swift.String : Any])
+  @objc convenience required public init?(coder aDecoder: Foundation.NSCoder)
+  @objc public func encode(with aCoder: Foundation.NSCoder)
+  @objc public static var supportsSecureCoding: Swift.Bool
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc(A0Profile) @objcMembers public class Profile : ObjectiveC.NSObject {
+  @objc final public let id: Swift.String
+  @objc final public let name: Swift.String
+  @objc final public let nickname: Swift.String
+  @objc final public let pictureURL: Foundation.URL
+  @objc final public let createdAt: Foundation.Date
+  @objc final public let email: Swift.String?
+  @objc final public let emailVerified: Swift.Bool
+  @objc final public let givenName: Swift.String?
+  @objc final public let familyName: Swift.String?
+  @objc final public let additionalAttributes: [Swift.String : Any]
+  @objc final public let identities: [Auth0.Identity]
+  @objc public subscript(key: Swift.String) -> Any? {
+    @objc get
+  }
+  public func value<Type>(_ key: Swift.String) -> Type?
+  @objc public var userMetadata: [Swift.String : Any] {
+    @objc get
+  }
+  @objc public var appMetadata: [Swift.String : Any] {
+    @objc get
+  }
+  @objc required public init(id: Swift.String, name: Swift.String, nickname: Swift.String, pictureURL: Foundation.URL, createdAt: Foundation.Date, email: Swift.String?, emailVerified: Swift.Bool, givenName: Swift.String?, familyName: Swift.String?, attributes: [Swift.String : Any], identities: [Auth0.Identity])
+  @objc convenience required public init?(json: [Swift.String : Any])
+  @objc deinit
+  @objc override dynamic public init()
+}
+extension NSError {
+  @objc dynamic public var a0_isManagementError: Swift.Bool {
+    @objc get
+  }
+  @objc dynamic public var a0_isAuthenticationError: Swift.Bool {
+    @objc get
+  }
+}
+public class UserPatchAttributes {
+  public init(dictionary: [Swift.String : Any] = [:])
+  public func blocked(_ blocked: Swift.Bool) -> Auth0.UserPatchAttributes
+  public func email(_ email: Swift.String, verified: Swift.Bool? = nil, verify: Swift.Bool? = nil, connection: Swift.String, clientId: Swift.String) -> Auth0.UserPatchAttributes
+  public func emailVerified(_ verified: Swift.Bool, connection: Swift.String) -> Auth0.UserPatchAttributes
+  public func phoneNumber(_ phoneNumber: Swift.String, verified: Swift.Bool? = nil, verify: Swift.Bool? = nil, connection: Swift.String, clientId: Swift.String) -> Auth0.UserPatchAttributes
+  public func phoneVerified(_ verified: Swift.Bool, connection: Swift.String) -> Auth0.UserPatchAttributes
+  public func password(_ password: Swift.String, verify: Swift.Bool? = nil, connection: Swift.String) -> Auth0.UserPatchAttributes
+  public func username(_ username: Swift.String, connection: Swift.String) -> Auth0.UserPatchAttributes
+  public func userMetadata(_ metadata: [Swift.String : Any]) -> Auth0.UserPatchAttributes
+  public func appMetadata(_ metadata: [Swift.String : Any]) -> Auth0.UserPatchAttributes
+  @objc deinit
+}
+extension URL {
+  public static func a0_url(_ domain: Swift.String) -> Foundation.URL
+}
+public class ManagementError : Auth0.Auth0Error, Swift.CustomStringConvertible {
+  final public let info: [Swift.String : Any]
+  required public init(string: Swift.String? = nil, statusCode: Swift.Int = 0)
+  required public init(info: [Swift.String : Any], statusCode: Swift.Int)
+  public var code: Swift.String {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  @objc deinit
+}
+extension ManagementError : Foundation.CustomNSError {
+  public static let infoKey: Swift.String
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+public struct Request<T, E> where E : Auth0.Auth0Error {
+  public typealias Callback = (Auth0.Result<T>) -> Swift.Void
+  public func start(_ callback: @escaping Auth0.Request<T, E>.Callback)
+}
+public struct ConcatRequest<F, S, E> where E : Auth0.Auth0Error {
+  public typealias ResultType = S
+  public func start(_ callback: @escaping (Auth0.Result<Auth0.ConcatRequest<F, S, E>.ResultType>) -> Swift.Void)
+}
+public protocol AuthCancelable {
+  func cancel()
+}
+public enum Result<T> {
+  case success(result: T)
+  case failure(error: Swift.Error)
+}
+public func webAuth(bundle: Foundation.Bundle = Bundle.main) -> Auth0.WebAuth
+public func webAuth(clientId: Swift.String, domain: Swift.String) -> Auth0.WebAuth
+public protocol WebAuthenticatable : Auth0.Loggable, Auth0.Trackable {
+  var clientId: Swift.String { get }
+  var url: Foundation.URL { get }
+  var telemetry: Auth0.Telemetry { get set }
+  func useUniversalLink() -> Self
+  func connection(_ connection: Swift.String) -> Self
+  func scope(_ scope: Swift.String) -> Self
+  func connectionScope(_ connectionScope: Swift.String) -> Self
+  func state(_ state: Swift.String) -> Self
+  func parameters(_ parameters: [Swift.String : Swift.String]) -> Self
+  func responseType(_ response: [Auth0.ResponseType]) -> Self
+  func redirectURL(_ redirectURL: Foundation.URL) -> Self
+  func nonce(_ nonce: Swift.String) -> Self
+  func audience(_ audience: Swift.String) -> Self
+  func issuer(_ issuer: Swift.String) -> Self
+  func leeway(_ leeway: Swift.Int) -> Self
+  func maxAge(_ maxAge: Swift.Int) -> Self
+  func useEphemeralSession() -> Self
+  @available(*, deprecated, message: "use response([.token])")
+  func usingImplicitGrant() -> Self
+  func start(_ callback: @escaping (Auth0.Result<Auth0.Credentials>) -> Swift.Void)
+  func clearSession(federated: Swift.Bool, callback: @escaping (Swift.Bool) -> Swift.Void)
+}
+@_inheritsConvenienceInitializers @objc(A0AuthenticationAPI) public class _ObjectiveAuthenticationAPI : ObjectiveC.NSObject {
+  @objc override dynamic public init()
+  @objc convenience public init(clientId: Swift.String, url: Foundation.URL)
+  @objc public init(clientId: Swift.String, url: Foundation.URL, session: Foundation.URLSession)
+  @objc(loginWithUsernameOrEmail:password:connection:scope:parameters:callback:) public func login(withUsernameOrEmail username: Swift.String, password: Swift.String, connection: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]?, callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  @objc(loginWithUsernameOrEmail:password:realm:audience:scope:parameters:callback:) public func login(withUsernameOrEmail username: Swift.String, password: Swift.String, realm: Swift.String, audience: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]?, callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  @objc(createUserWithEmail:username:password:connection:userMetadata:callback:) public func createUser(withEmail email: Swift.String, username: Swift.String?, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]?, callback: @escaping (Foundation.NSError?, [Swift.String : Any]?) -> Swift.Void)
+  @objc(resumeAuthWithURL:options:) public static func resume(_ url: Foundation.URL, options: [Auth0.A0URLOptionsKey : Any]) -> Swift.Bool
+  @objc(renewWithRefreshToken:scope:callback:) public func renew(WithRefreshToken refreshToken: Swift.String, scope: Swift.String, callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  @objc(resetPasswordWithEmail:connection:callback:) public func resetPassword(withEmail email: Swift.String, connection: Swift.String, callback: @escaping (Foundation.NSError?) -> Swift.Void)
+  @objc(signUpWithEmail:username:password:connection:userMetadata:scope:parameters:callback:) public func signUp(withEmail email: Swift.String, username: Swift.String?, password: Swift.String, connection: Swift.String, userMetadata: [Swift.String : Any]?, scope: Swift.String, parameters: [Swift.String : Any]?, callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  @objc(startPasswordlessWithCodeToEmail:connection:callback:) public func startPasswordlessCode(email: Swift.String, connection: Swift.String, callback: @escaping (Foundation.NSError?) -> Swift.Void)
+  @objc(startPasswordlessWithLinkToEmail:connection:callback:) public func startPasswordlessLink(email: Swift.String, connection: Swift.String, callback: @escaping (Foundation.NSError?) -> Swift.Void)
+  @objc(startPasswordlessWithCodeToPhoneNumber:connection:callback:) public func startPasswordlessCode(phoneNumber: Swift.String, connection: Swift.String, callback: @escaping (Foundation.NSError?) -> Swift.Void)
+  @objc(startPasswordlessWithLinkToPhoneNumber:connection:callback:) public func startPasswordlessLink(phoneNumber: Swift.String, connection: Swift.String, callback: @escaping (Foundation.NSError?) -> Swift.Void)
+  @available(*, deprecated, message: "see userInfoWithToken:callback:")
+  @objc(tokenInfoFromToken:callback:) public func tokenInfo(fromToken token: Swift.String, callback: @escaping (Foundation.NSError?, Auth0.Profile?) -> Swift.Void)
+  @objc(userInfoWithToken:callback:) public func userInfo(withToken token: Swift.String, callback: @escaping (Foundation.NSError?, Auth0.Profile?) -> Swift.Void)
+  @objc(loginSocialWithToken:connection:scope:parameters:callback:) public func loginSocial(withToken token: Swift.String, connection: Swift.String, scope: Swift.String, parameters: [Swift.String : Any]?, callback: @escaping (Foundation.NSError?, Auth0.Credentials?) -> Swift.Void)
+  public func setTelemetryEnabled(enabled: Swift.Bool)
+  @objc deinit
+}
+@objc(A0Identity) public class Identity : ObjectiveC.NSObject {
+  @objc final public let identifier: Swift.String
+  @objc final public let provider: Swift.String
+  @objc final public let connection: Swift.String
+  @objc final public let social: Swift.Bool
+  @objc final public let profileData: [Swift.String : Any]
+  @objc final public let accessToken: Swift.String?
+  @objc final public let expiresIn: Foundation.Date?
+  @objc final public let accessTokenSecret: Swift.String?
+  @objc override dynamic public var debugDescription: Swift.String {
+    @objc get
+  }
+  @objc required public init(identifier: Swift.String, provider: Swift.String, connection: Swift.String, social: Swift.Bool, profileData: [Swift.String : Any], accessToken: Swift.String?, expiresIn: Foundation.Date?, accessTokenSecret: Swift.String?)
+  @objc convenience required public init?(json: [Swift.String : Any])
+  @objc override dynamic public init()
+  @objc deinit
+}
+public struct ResponseType : Swift.OptionSet {
+  public let rawValue: Swift.Int
+  public init(rawValue: Swift.Int)
+  public static let token: Auth0.ResponseType
+  public static let idToken: Auth0.ResponseType
+  public static let code: Auth0.ResponseType
+  public typealias Element = Auth0.ResponseType
+  public typealias ArrayLiteralElement = Auth0.ResponseType
+  public typealias RawValue = Swift.Int
+}
+public struct Telemetry {
+  public init()
+}
+public protocol Trackable {
+  var telemetry: Auth0.Telemetry { get set }
+}
+extension Trackable {
+  public mutating func tracking(enabled: Swift.Bool)
+  public mutating func using(inLibrary name: Swift.String, version: Swift.String)
+}
+public enum CredentialsManagerError : Swift.Error {
+  case noCredentials
+  case noRefreshToken
+  case failedRefresh(Swift.Error)
+  case touchFailed(Swift.Error)
+  case revokeFailed(Swift.Error)
+}
+public class AuthenticationError : Auth0.Auth0Error, Swift.CustomStringConvertible {
+  final public let info: [Swift.String : Any]
+  final public let statusCode: Swift.Int
+  required public init(string: Swift.String? = nil, statusCode: Swift.Int = 0)
+  required public init(info: [Swift.String : Any], statusCode: Swift.Int)
+  public var code: Swift.String {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+  public var isMultifactorRequired: Swift.Bool {
+    get
+  }
+  public var isMultifactorEnrollRequired: Swift.Bool {
+    get
+  }
+  public var isMultifactorCodeInvalid: Swift.Bool {
+    get
+  }
+  public var isMultifactorTokenInvalid: Swift.Bool {
+    get
+  }
+  public var isPasswordNotStrongEnough: Swift.Bool {
+    get
+  }
+  public var isPasswordAlreadyUsed: Swift.Bool {
+    get
+  }
+  public var isRuleError: Swift.Bool {
+    get
+  }
+  public var isInvalidCredentials: Swift.Bool {
+    get
+  }
+  public var isAccessDenied: Swift.Bool {
+    get
+  }
+  public var isTooManyAttempts: Swift.Bool {
+    get
+  }
+  public var isVerificationRequired: Swift.Bool {
+    get
+  }
+  public func value<T>(_ key: Swift.String) -> T?
+  @objc deinit
+}
+extension AuthenticationError : Foundation.CustomNSError {
+  public static let infoKey: Swift.String
+  public static var errorDomain: Swift.String {
+    get
+  }
+  public var errorCode: Swift.Int {
+    get
+  }
+  public var errorUserInfo: [Swift.String : Any] {
+    get
+  }
+}
+public protocol Users : Auth0.Loggable, Auth0.Trackable {
+  var token: Swift.String { get }
+  var url: Foundation.URL { get }
+  func get(_ identifier: Swift.String, fields: [Swift.String], include: Swift.Bool) -> Auth0.Request<Auth0.ManagementObject, Auth0.ManagementError>
+  func patch(_ identifier: Swift.String, attributes: Auth0.UserPatchAttributes) -> Auth0.Request<Auth0.ManagementObject, Auth0.ManagementError>
+  func patch(_ identifier: Swift.String, userMetadata: [Swift.String : Any]) -> Auth0.Request<Auth0.ManagementObject, Auth0.ManagementError>
+  func link(_ identifier: Swift.String, withOtherUserToken token: Swift.String) -> Auth0.Request<[Auth0.ManagementObject], Auth0.ManagementError>
+  func link(_ identifier: Swift.String, withUser userId: Swift.String, provider: Swift.String, connectionId: Swift.String?) -> Auth0.Request<[Auth0.ManagementObject], Auth0.ManagementError>
+  func unlink(identityId: Swift.String, provider: Swift.String, fromUserId identifier: Swift.String) -> Auth0.Request<[Auth0.ManagementObject], Auth0.ManagementError>
+}
+extension Users {
+  public func get(_ identifier: Swift.String, fields: [Swift.String] = [], include: Swift.Bool = true) -> Auth0.Request<Auth0.ManagementObject, Auth0.ManagementError>
+  public func link(_ identifier: Swift.String, withUser userId: Swift.String, provider: Swift.String, connectionId: Swift.String? = nil) -> Auth0.Request<[Auth0.ManagementObject], Auth0.ManagementError>
+}
+extension Auth0.PasswordlessType : Swift.Equatable {}
+extension Auth0.PasswordlessType : Swift.Hashable {}
+extension Auth0.PasswordlessType : Swift.RawRepresentable {}
