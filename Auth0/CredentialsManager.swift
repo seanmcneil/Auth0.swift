@@ -204,7 +204,7 @@ public struct CredentialsManager {
 
     func willExpire(_ credentials: Credentials, within ttl: Int) -> Bool {
         if let expiresIn = credentials.expiresIn {
-            return expiresIn < Date(timeIntervalSinceNow: TimeInterval(ttl))
+            return expiresIn < NSDate(timeIntervalSinceNow: TimeInterval(ttl))
         }
 
         return false
@@ -212,7 +212,7 @@ public struct CredentialsManager {
 
     func hasExpired(_ credentials: Credentials) -> Bool {
         if let expiresIn = credentials.expiresIn {
-            if expiresIn < Date() { return true }
+            if expiresIn < NSDate() { return true }
         }
 
         if let token = credentials.idToken, let jwt = try? decode(jwt: token) {
@@ -233,4 +233,10 @@ public struct CredentialsManager {
         return false
     }
 
+}
+
+extension NSDate: Comparable {
+    public static func < (lhs: NSDate, rhs: NSDate) -> Bool {
+        lhs.timeIntervalSince1970 < rhs.timeIntervalSince1970
+    }
 }
